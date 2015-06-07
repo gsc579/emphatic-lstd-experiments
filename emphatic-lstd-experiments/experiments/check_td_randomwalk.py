@@ -20,6 +20,7 @@ from algorithms.td import TD
 from features.features import Bias, Combination, Int2Binary, Int2Unary
 from environments.chain import Chain
 
+
 # Specify experiment #############
 random_seed = None
 num_episodes = 1000

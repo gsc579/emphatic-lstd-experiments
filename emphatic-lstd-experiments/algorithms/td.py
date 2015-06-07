@@ -12,8 +12,9 @@ class TD:
         self.z = np.zeros(n)
         self.theta = np.zeros(n)
 
-    def update(self, fvec, R, fvec_p, alpha, gamma, lmbda):
+    def update(self, fvec, R, fvec_p, alpha, gamma, lmbda, rho=1):
         """ Perform an update for a single step of the algorithm. """
+        # TODO: Check off-policy implementation
         self.z  = fvec + (gamma*lmbda*self.z) # accumulating traces
         
         delta = R + gamma*np.dot(self.theta, fvec_p) - np.dot(self.theta, fvec)
