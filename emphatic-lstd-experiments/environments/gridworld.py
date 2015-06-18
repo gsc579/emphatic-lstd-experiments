@@ -19,7 +19,7 @@ class Gridworld:
     States are specified as (i,j) coordinate pairs, corresponding to the i-th 
     row and the j-th column.
     """
-    def __init__(self, nx, ny, start=None, goal=None):
+    def __init__(self, nx, ny, start=None, goal=None, **kwargs):
         if start is None:
             start = (0, 0)
         if goal is None:
@@ -93,6 +93,11 @@ class Gridworld:
         if s is None:
             s = self.state 
         return self.vision(s)
+
+    def get_actions(self, s=None):
+        if s is None:
+            s = self.state 
+        return self.actions
 
     def do(self, action):
         # Allow for actions to be specified as either integers or their name

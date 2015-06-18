@@ -15,7 +15,7 @@ def start_indices(seqs):
 
 
 
-
+# Initializing with episodes is suboptimal...
 class FirstVisitInterest:
     def __init__(self, episodes):
         # Using sets might be non-ideal
@@ -42,6 +42,7 @@ class FirstVisitInterest:
 
 
 class StartStateInterest:
+    # Rewrite this
     def __init__(self, episodes):
         # Using sets might be non-ideal
         self.starts = set(accumulate(len(ep) for ep in episodes))

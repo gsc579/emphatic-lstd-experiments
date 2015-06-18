@@ -1,6 +1,6 @@
 """
-A sort of integrative test, checking that TD works properly on the random walk
-environment.
+A sort of integrative test, checking that Emphatic LSTD works properly on the 
+random walk environment.
 
 We should see convergence to `1/2` for a single "bias" feature, convergence to
 `(1/n, 2/n, ..., (n-1)/n)` for the tabular representation, and and something
@@ -16,7 +16,7 @@ import numpy as np
 import matplotlib.pyplot as plt 
 import matplotlib.cm as cm 
 
-from algorithms.td import TD 
+from algorithms.lstd import LSTD 
 from features.features import Bias, Combination, Int2Binary, Int2Unary
 from environments.chain import Chain
 
@@ -66,8 +66,7 @@ phi  = Combination((phi1, phi2), terminals=env.terminals)
 # phi = Int2Unary(env.num_states, terminals=env.terminals)
 
 # Setup agent
-agent = TD(phi.length)
-alpha = 0.01
+agent = LSTD(phi.length)
 gamma = 1
 lmbda = 0
 
@@ -81,12 +80,12 @@ for episode in episodes:
         s, a, r, sp = step
         fvec = phi(s)
         fvec_p = phi(sp)
-        agent.update(fvec, r, fvec_p, alpha, gamma, lmbda)
+        agent.update(fvec, r, fvec_p, gamma, lmbda)
     # Perform final step
     s, a, r, sp = episode[-1]
     fvec = phi(s)
     fvec_p = np.zeros_like(fvec)
-    agent.update(fvec, r, fvec_p, alpha, gamma, lmbda)
+    agent.update(fvec, r, fvec_p, gamma, lmbda)
 
 
 # Determine the values of each state

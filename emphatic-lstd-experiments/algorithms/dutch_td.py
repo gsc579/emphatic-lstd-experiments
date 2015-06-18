@@ -1,33 +1,26 @@
 """
-Temporal Difference Learning -- TD(λ) 
+Temporal Difference Learning with Dutch Traces.
 """
 import numpy as np
 
 
-class TD:
+class TrueOnlineTD:
     def __init__(self, n, **kwargs):
         """ Initialize the agent. """
         self.n = n
-        self.t = 0
         self.z = np.zeros(n)
         self.theta = np.zeros(n)
 
-    def update(self, fvec, R, fvec_p, params):
+    def update(self, fvec, R, fvec_p, alpha, gamma, lmbda, rho=1):
         """ Perform an update for a single step of the algorithm. """
-        alpha = params['alpha']
-        gamma = params['gamma']
-        lmbda = params['lmbda']
-        rho   = params['rho']
-        # TODO: Check off-policy implementation
-        self.z  = fvec + (gamma*lmbda*self.z) # accumulating traces
+        self.z  = rho*gamma*lmbda*self.z + rho*alpha*(1 - rho*gamma*lmbda*np.dot(fvec, self.z))*fvec
         
         delta = R + gamma*np.dot(self.theta, fvec_p) - np.dot(self.theta, fvec)
         self.theta += alpha*delta*self.z
-        self.t += 1
         return delta
 
     def reset(self):
-        """Reset traces for the start of episode."""
+        """Perform reset for end of episode."""
         self.z[:] = 0
 
     @classmethod

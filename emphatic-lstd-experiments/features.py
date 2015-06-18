@@ -9,14 +9,20 @@ when the function is called.
 """
 import numpy as np
 
+# Path-fixing hack
+import inspect, os, sys
+filename = inspect.getframeinfo(inspect.currentframe()).filename
+curdir = os.path.dirname(os.path.abspath(filename))
+pardir = os.path.dirname(curdir)
+sys.path.append(pardir)
+
+from util_misc import convert, print_args
+
+
 
 class Combination:
     """A feature from the combination of other features."""
     def __init__(self, features, terminals=None):
-        if terminals is None:
-            self._terminals = set()
-        else:
-            self._terminals = set(terminals)
         self.length = sum(x.length for x in features)
         self._features = features
 
@@ -25,38 +31,22 @@ class Combination:
         return self._terminals
 
     def __call__(self, x):
-        # if x in self.terminals:
-        #     return np.zeros(self.length)
         return np.concatenate([f(x) for f in self._features])
-
 
 
 class Bias:
     """A bias feature (always returns 1 except in terminal state)"""
-    def __init__(self, terminals=None):
-        if terminals is None:
-            self._terminals = set()
-        else:
-            self._terminals = set(terminals)
+    def __init__(self):
         self.length = 1
 
     def __call__(self, x):
-        # if x in self.terminals:
-        #     return np.zeros(self.length)
         return np.ones(1)
-
-    @property 
-    def terminals(self):
-        return self._terminals
 
 
 class Identity:
     """Identity mapping. Return the vector passed to it."""
-    def __init__(self, length, terminals=None):
-        if terminals is None:
-            self._terminals = set()
-        else:
-            self._terminals = set(terminals)
+    @convert(lambda x: x, int)
+    def __init__(self, length):
         self.length = length 
 
     def __call__(self, x):
@@ -64,9 +54,6 @@ class Identity:
         assert(len(x) == self.length)
         return x
 
-    @property 
-    def terminals(self):
-        return self._terminals
 
 
 class Int2Binary:
@@ -96,6 +83,15 @@ class Int2Binary:
     @property 
     def terminals(self):
         return self._terminals
+
+    @property 
+    def nin(self):
+        return 1
+
+    @property 
+    def nout(self):
+        return self.length
+
 
 class Int2Unary:
     """

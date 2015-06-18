@@ -5,7 +5,7 @@ class Chain:
     states at the "ends" of the chain. 
     """
     ACTIONS = ('left', 'right')
-    def __init__(self, length, start=None):
+    def __init__(self, length, start=None, **kwargs):
         if start is None:
             start = (length - 1) // 2
         
@@ -29,10 +29,35 @@ class Chain:
     def RIGHTMOST(self):
         return self.length - 1
 
+    @property
+    def actions(self):
+        return self.ACTIONS
+
+    @property 
+    def states(self):
+        return list(range(self.LEFTMOST, self.RIGHTMOST + 1))
+
+    @property
+    def terminals(self):
+        return [s for s in self.states if self.is_terminal(s)]
+
+    @property
+    def nonterminals(self):
+        return [s for s in self.states if not self.is_terminal(s)]
+
+    @property
+    def num_states(self):
+        return len(self.nonterminals) + 1
+ 
     def observe(self, s=None):
         if s is None:
             s = self.state 
         return s
+
+    def get_actions(self, s=None):
+        if s is None:
+            s = self.state
+        return self.actions
 
     def do(self, action):
         if self.is_terminal():
@@ -53,23 +78,3 @@ class Chain:
             return 1
         else:
             return 0
-
-    @property
-    def actions(self):
-        return self.ACTIONS
-
-    @property 
-    def states(self):
-        return list(range(self.LEFTMOST, self.RIGHTMOST + 1))
-
-    @property
-    def terminals(self):
-        return [s for s in self.states if self.is_terminal(s)]
-
-    @property
-    def nonterminals(self):
-        return [s for s in self.states if not self.is_terminal(s)]
-
-    @property
-    def num_states(self):
-        return len(self.nonterminals) + 1

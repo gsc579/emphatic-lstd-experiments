@@ -1,7 +1,4 @@
-#!python3
-"""
-Least Squares Temporal Difference Learning.
-"""
+"""Least Squares Temporal Difference Learning."""
 import numpy as np 
 
 
@@ -14,7 +11,7 @@ class LSTD():
         self.b  = np.zeros(n) 
 
     def reset(self):
-        """Perform end-of-episode reset."""
+        """Reset traces for the start of episode."""
         self.z[:] = 0
 
     @property 
@@ -22,7 +19,10 @@ class LSTD():
         _theta = np.dot(np.linalg.pinv(self.A), self.b)
         return _theta 
 
-    def update(self, fvec, reward, fvec_p, gamma, lmbda):
+    def update(self, fvec, reward, fvec_p, params):
+        # Should include rho and gamma_p to be completely correct
+        gamma = params['gamma']
+        lmbda = params['lmbda']
         self.z = gamma * lmbda * self.z + fvec 
         self.A += np.outer(self.z, (fvec - gamma*fvec_p))
         self.b += self.z * reward
