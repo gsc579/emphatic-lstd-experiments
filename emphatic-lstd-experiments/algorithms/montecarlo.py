@@ -38,6 +38,11 @@ class FirstVisitMC:
     def terminate(self):
         """End of episode termination."""
         for fv, rewards in self.epdct.items():
+            """
+            range()是一个函数， for i in range () 就是给i赋值：
+            比如 for i in range （1，3）：
+            就是把1,2依次赋值给i
+            """
             self.retdct[fv].append(sum(rewards))
 
         # reset for start of next episode
