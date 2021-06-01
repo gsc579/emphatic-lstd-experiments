@@ -21,6 +21,8 @@ class ELSTD:
     @property
     def theta(self):
         _theta = np.dot(np.linalg.pinv(self.A), self.b)
+        #np.dot(a,b)矩阵ab相乘
+        #在numpy中可以使用numpy.linalg.pinv求伪逆
         return _theta
 
     def update(self, fvec, reward, fvec_p, params):
